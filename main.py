@@ -1,3 +1,3 @@
-from bot import run_bot
+from shop.bot.shop_bot import bot
 
-run_bot.run()
+bot.polling()
