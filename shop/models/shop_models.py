@@ -24,10 +24,12 @@ class User(me.Document):
     phone_number = me.StringField(max_length=12)
     email = me.EmailField()
     is_blocked = me.BooleanField(default=False)
+    address = me.StringField(max_length=256)
 
     def formatted_data(self):
         return f'Id - {self.telegram_id}\nUsername - {self.username}\nFirst name - {self.first_name}'\
-               f'\nEmail - {self.email if self.email else ""}\nPhone number - {self.phone_number}'
+               f'\nEmail - {self.email if self.email else ""}\nPhone number - {self.phone_number}'\
+               f'\nAddress - {self.address if self.address else ""}'
 
 
 class Category(me.Document):

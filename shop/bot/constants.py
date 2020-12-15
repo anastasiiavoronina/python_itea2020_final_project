@@ -15,3 +15,17 @@ START_KB = {
 }
 
 CATEGORY_TAG = 1
+
+MODIFY_ADDRESS = 'Change address'
+MODIFY_NAME = 'Change name'
+MODIFY_PHONE = 'Change phone'
+MODIFY_EMAIL = 'Change email'
+
+SETTINGS_UPDATE = {
+    MODIFY_ADDRESS: 'Please provide new address',
+    MODIFY_NAME: 'Please provide new name',
+    MODIFY_PHONE: 'Please provide new phone',
+    MODIFY_EMAIL: 'Please provide new email'
+}
+
+MODIFY_SETTINGS_TAG = 2
