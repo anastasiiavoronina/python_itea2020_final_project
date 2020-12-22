@@ -23,7 +23,7 @@ update_status_for_users = {}
 @app.route(WEBHOOKURI, methods=['POST'])
 def handle_webhook():
     if request.headers.get('content-type') == 'application/json':
-        json_string = request.get_data()
+        json_string = request.get_data().decode('utf-8')
         print('***json form telegram')
         print(json_string)
         update = Update.de_json(json_string)
