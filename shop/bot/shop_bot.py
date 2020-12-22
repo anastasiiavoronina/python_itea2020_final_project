@@ -64,14 +64,25 @@ def handle_category_click(call):
         products = category.get_products()
         for p in products:
             if p.image:
+                kb = InlineKeyboardMarkup()
+                button = InlineKeyboardButton(text=constants.ADD_TO_CART,
+                                              callback_data=json.dumps({
+                                                                        'id':str(p.id),
+                                                                        'tag':constants.PRODUCT_TAG
+                                                                       }
+                                                                      )
+                                              )
+                kb.add(button)
                 description = p.description if p.description else ''
                 bot.send_photo(call.message.chat.id,
                                p.image.read(),
                                #caption=f'{p.title}\n{description}'
-                               caption=p.formatted_data()
+                               caption=p.formatted_data(),
+                               reply_markup=kb
                               )
             else:
                 bot.send_message(call.message.chat.id, p.formatted_data())
+                #TO DO - ADD LOGIC WITH ADDING TO CART IN CASE WE DON'T HAVE AN IMAGE
 
     #products = Product.objects(category=category)
     # for p in products:
@@ -109,19 +120,28 @@ def handle_settings(message: Message):
         user = User.objects.get(telegram_id=message.chat.id)
         user.update(address=message.text)
         update_status_for_users[message.chat.id] = None
-        bot.send_message(message.chat.id, 'Modification was completed')
+        bot.send_message(message.chat.id, 'Modification was saved')
     elif update_status_for_users[message.chat.id] == constants.MODIFY_NAME:
         user = User.objects.get(telegram_id=message.chat.id)
         user.update(first_name=message.text)
         update_status_for_users[message.chat.id] = None
-        bot.send_message(message.chat.id, 'Modification was completed')
+        bot.send_message(message.chat.id, 'Modification was saved')
     elif update_status_for_users[message.chat.id] == constants.MODIFY_PHONE:
         user = User.objects.get(telegram_id=message.chat.id)
         user.update(phone_number=message.text)
         update_status_for_users[message.chat.id] = None
-        bot.send_message(message.chat.id, 'Modification was completed')
+        bot.send_message(message.chat.id, 'Modification was saved')
     elif update_status_for_users[message.chat.id] == constants.MODIFY_EMAIL:
         user = User.objects.get(telegram_id=message.chat.id)
         user.update(email=message.text)
         update_status_for_users[message.chat.id] = None
-        bot.send_message(message.chat.id, 'Modification was completed')
+        bot.send_message(message.chat.id, 'Modification was saved')
+
+@bot.callback_query_handler(lambda c: json.loads(c.data)['tag'] == constants.PRODUCT_TAG)
+def handle_add_to_cart(call):
+    product_id = json.loads(call.data)['id']
+    product = Product.objects.get(id=product_id)
+    user = User.objects.get(telegram_id=call.message.chat.id)
+    cart = user.get_active_cart()
+    cart.add_product(product)
+    bot.answer_callback_query(call.id, 'Product was added')

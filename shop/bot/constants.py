@@ -1,4 +1,6 @@
 GREETINGS = 'Hello{}. Nice to see you in our bot-shop'
+ADD_TO_CART = 'Add to cart'
+
 
 CATEGORIES = 1
 CART = 2
@@ -15,6 +17,8 @@ START_KB = {
 }
 
 CATEGORY_TAG = 1
+MODIFY_SETTINGS_TAG = 2
+PRODUCT_TAG = 3
 
 MODIFY_ADDRESS = 'Change address'
 MODIFY_NAME = 'Change name'
@@ -28,4 +32,4 @@ SETTINGS_UPDATE = {
     MODIFY_EMAIL: 'Please provide new email'
 }
 
-MODIFY_SETTINGS_TAG = 2
+

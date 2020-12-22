@@ -31,6 +31,14 @@ class User(me.Document):
                f'\nEmail - {self.email if self.email else ""}\nPhone number - {self.phone_number}'\
                f'\nAddress - {self.address if self.address else ""}'
 
+    def get_active_cart(self):
+        cart = Cart.objects(user=self, is_active=True).first()
+        if not cart:
+            print('creating new cart...')
+            cart = Cart.objects.create(user=self)
+            print(cart)
+        return cart
+
 
 class Category(me.Document):
     title = me.StringField(required=True)
@@ -98,16 +106,38 @@ class Product(me.Document):
         return f'{self.title}{" (" + self.description + ")" if self.description else ""}. Price: {str(self.price)}'\
                f'{params}'
 
+    @property
+    def product_price(self):
+        return (100 - self.discount) / 100 * self.price
 
-class ProductInCart(me.EmbeddedDocument):
-    product = me.ReferenceField(Product, required=True)
-    amount = me.IntField(default=1)
-    actual_price = me.FloatField(required=True)
+
+# class ProductInCart(me.EmbeddedDocument):
+#     product = me.ReferenceField(Product, required=True)
+#     amount = me.IntField(default=1)
+#     actual_price = me.FloatField(required=True)
+#
+
+# class Cart(me.Document):
+#     user = me.ReferenceField(User, required=True)
+#     product_in_cart = me.ListField(ProductInCart, required=True)
 
 
 class Cart(me.Document):
     user = me.ReferenceField(User, required=True)
-    product_in_cart = me.ListField(ProductInCart, required=True)
+    products = me.ListField(me.ReferenceField(Product))
+    is_active = me.BooleanField(default=True)
+    created_at = me.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        self.created_at = datetime.datetime.now()
+        super().save(*args, **kwargs)
+
+    def add_product(self, product):
+        self.products.append(product)
+        self.save()
+
+
+
 
 
 class Order(me.Document):
@@ -116,4 +146,3 @@ class Order(me.Document):
     cart = me.ReferenceField(Cart, required=True)
     ordered_at = me.DateTimeField(default=datetime.datetime.now())
     delivery_address = me.StringField(min_length=2, max_length=256)
-
