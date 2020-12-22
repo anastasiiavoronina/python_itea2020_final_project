@@ -1,3 +1,5 @@
+from flask import Flask, request, abort
+from telebot.types import Update
 import json
 
 from mongoengine import NotUniqueError
@@ -6,13 +8,30 @@ from telebot.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardBut
 
 from ..models.shop_models import Category, Product, User
 from ..models.extra_models import News
-from .config import TOKEN
+from .config import TOKEN, WEBHOOKURI, WEBHOOKURL
 from . import constants
 from .utils import inline_kb_from_iterable
+import time
+
+app = Flask(__name__)
 
 bot = TeleBot(TOKEN)
 
 update_status_for_users = {}
+
+
+@app.route(WEBHOOKURI, methods=['POST'])
+def handle_webhook():
+    if request.headers.get('content-type') == 'application/json':
+        json_string = request.get_data()
+        print('***json form telegram')
+        print(json_string)
+        update = Update.de_json(json_string)
+        bot.process_new_updates([update])
+        return ''
+    abort(403)
+
+
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
