@@ -1,3 +1,4 @@
+from bot.sending_news import Sender
 from models.extra_models import *
 from models.shop_models import *
 
@@ -5,20 +6,31 @@ if __name__ == '__main__':
 
     pass
 
+
+    s = Sender(User.objects(), text='News', reply_markup=kb)
+    s.send_message()
+
     # n = News(title='Discounts available', body='New products added to the sale')
     # n.save()
+    # Sender(User.objects(), text=n.title).send_message()
     # n = News(title='Laptops added', body='New category Laptops was added')
     # n.save()
+    # Sender(User.objects(), text=n.title).send_message()
     # n = News(title='Mobile phones added', body='New category Mobile phones was added')
     # n.save()
+    # Sender(User.objects(), text=n.title).send_message()
     # n = News(title='Discounts for new customers', body='New customers will get 5% discount')
     # n.save()
+    # Sender(User.objects(), text=n.title).send_message()
     # n = News(title='Discounts available', body='Check products with discounts')
     # n.save()
+    # Sender(User.objects(), text=n.title).send_message()
     # n = News(title='Boilers added', body='New category Boilers phones was added')
     # n.save()
+    # Sender(User.objects(), text=n.title).send_message()
     # n = News(title='Furniture added', body='New category Furniture was added')
     # n.save()
+    # Sender(User.objects(), text=n.title).send_message()
 
     # news = News.objects().order_by('-modified')[:5]
     # for n in news:

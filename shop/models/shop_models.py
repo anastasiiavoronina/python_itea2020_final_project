@@ -84,6 +84,10 @@ class Product(me.Document):
     #product.image.put(file, content_type='image/jpeg')
     #product.save()
 
+    @property
+    def product_price(self):
+        return (100 - self.discount) / 100 * self.price
+
     def formatted_data(self):
         if self.parameters:
             params = "\n"
@@ -103,12 +107,9 @@ class Product(me.Document):
                 params = params + str(self.parameters.additional_description)
         else:
             params = ""
-        return f'{self.title}{" (" + self.description + ")" if self.description else ""}. Price: {str(self.price)}'\
+        return f'{self.title}{" (" + self.description + ")" if self.description else ""}\n'\
+               f'Price with discount: {str(self.product_price)}'\
                f'{params}'
-
-    @property
-    def product_price(self):
-        return (100 - self.discount) / 100 * self.price
 
 
 # class ProductInCart(me.EmbeddedDocument):

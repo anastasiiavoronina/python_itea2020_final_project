@@ -29,7 +29,7 @@ class Sender:
 
             time.sleep(0.1)
 
-        User.objects(telegram_id_in=blocked_ids).update(is_blocked=True)
+        User.objects(telegram_id__in=blocked_ids).update(is_blocked=True)
 
 
 def cron_unlock_users():
